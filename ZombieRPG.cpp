@@ -27,7 +27,14 @@ const int MAX_FOOD = 20;
 const int MAX_MEDKITS = 5;
 const int MAX_WEAPONS = 5;
 
-// Zombies
+//Max values
+// Zombie stats Health
+const int MAX_ZOMBIE_HEALTH = 50;
+
+// Zombie stats Damage
+const int MAX_ZOMBIE_DAMAGE = 5;
+
+// Max Zombies
 const int MAX_ZOMBIES = 5;
 
 // Classes
@@ -69,14 +76,6 @@ void addMedkit() {
 
 void addWeapon() {
     weapons++;
-}
-
-void addZombie() {
-    zombies++;
-}
-
-void removeZombie() {
-    zombies--;
 }
 
 void addZombieKill() {
@@ -180,27 +179,30 @@ private:
 
 class Zombie {
 public:
-    Zombie(int health, int damage) {
-        this->health = health;
-        this->damage = damage;
+    Zombie(int zombieHealth, int zombieDamage) {
+        zombieHealth = MAX_ZOMBIE_HEALTH;
+        zombieDamage = MAX_ZOMBIE_DAMAGE;
     }
 
-    int getHealth() {
-        return health;
+    int getZombieHealth() {
+        return zombieHealth;
     }
 
-    int getDamage() {
-        return damage;
+    int getZDamage() {
+        return zombieDamage;
     }
 
     void takeDamage(int damage) {
-        health -= damage;
-        if (health < 0) {
-            health = 0;
+        zombieHealth -= damage;
+        if (zombieHealth < 0) {
+            zombieHealth = 0;
         }
 
+    }
+
     private:
-        int health;
+        int zombieHealth;
+        int zombieDamage;
         int damage;
     };
 }
@@ -251,8 +253,8 @@ void printLocation(int location, map<int, Location> locations) {
 }
 
 void fightZombie(Player& player, Zombie& zombie) {
-    while (player.getHealth() > 0 && zombie.getHealth() > 0) {
-        player.takeDamage(zombie.getDamage());
+    while (player.getHealth() > 0 && zombie.getZombieHealth() > 0) {
+        player.takeDamage(zombie.getZDamage());
         zombie.takeDamage(player.getDamage());
     }
 
