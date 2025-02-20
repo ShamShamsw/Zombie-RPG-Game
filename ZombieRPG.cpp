@@ -8,33 +8,16 @@
 using namespace std;
 
 // Constants
-//Map size
 const int MAP_SIZE = 5;
-
-//Max values
-// Player stats Health and Hunger
 const int MAX_HEALTH = 100;
 const int MAX_HUNGER = 100;
-
-// Player stats Damage
 const int MAX_DAMAGE = 10;
-
-// Player stats Heal and Food
 const int MAX_HEAL = 20;
 const int MAX_FOOD = 20;
-
-// Player stats Medkits and Weapons
 const int MAX_MEDKITS = 5;
 const int MAX_WEAPONS = 5;
-
-//Max values
-// Zombie stats Health
 const int MAX_ZOMBIE_HEALTH = 50;
-
-// Zombie stats Damage
 const int MAX_ZOMBIE_DAMAGE = 5;
-
-// Max Zombies
 const int MAX_ZOMBIES = 5;
 
 // Classes
@@ -47,73 +30,81 @@ public:
         medkits = 0;
         weapons = 0;
         location = 0;
+        zombieKills = 0;
     }
 
-void takeDamage(int damage) {
-    health -= damage;
-    if (health < 0) {
-        health = 0;
+    void takeDamage(int damage) {
+        health -= damage;
+        if (health < 0) {
+            health = 0;
+        }
     }
-}
 
-void heal(int heal) {
-    health += heal;
-    if (health > MAX_HEALTH) {
-        health = MAX_HEALTH;
+    void heal(int heal) {
+        health += heal;
+        if (health > MAX_HEALTH) {
+            health = MAX_HEALTH;
+        }
     }
-}
 
-void eat(int food) {
-    hunger += food;
-    if (hunger > MAX_HUNGER) {
-        hunger = MAX_HUNGER;
+    void eat(int food) {
+        hunger += food;
+        if (hunger > MAX_HUNGER) {
+            hunger = MAX_HUNGER;
+        }
     }
-}
 
-void addMedkit() {
-    medkits++;
-}
+    void addMedkit() {
+        medkits++;
+    }
 
-void addWeapon() {
-    weapons++;
-}
+    void addWeapon() {
+        weapons++;
+    }
 
-void addZombieKill() {
-    zombieKills++;
-}
+    void addZombieKill() {
+        zombieKills++;
+    }
 
-void increaseDamage() {
-    damage++;
-}
+    void increaseDamage() {
+        damage++;
+    }
 
-void decreaseDamage() {
-    damage--;
-}
+    void decreaseDamage() {
+        damage--;
+    }
 
-int getHealth() {
-    return health;
-}
+    int getHealth() {
+        return health;
+    }
 
-int getHunger() {
-    return hunger;
-}
+    int getHunger() {
+        return hunger;
+    }
 
-int getMedkits() {
-    return medkits;
-}
+    int getMedkits() {
+        return medkits;
+    }
 
-int getWeapons() {
-    return weapons;
-}
+    int getWeapons() {
+        return weapons;
+    }
 
-int getZombiesKilled() {
-    return zombieKills;
-}
+    int getZombiesKilled() {
+        return zombieKills;
+    }
 
-int getDamage() {
-    return damage;
-}
+    int getDamage() {
+        return damage;
+    }
 
+    int getLocation() {
+        return location;
+    }
+
+    void setLocation(int loc) {
+        location = loc;
+    }
 
 private:
     int health;
@@ -134,21 +125,21 @@ public:
         this->damage = damage;
     }
 
-string getName() {
-    return name;
-}
+    string getName() {
+        return name;
+    }
 
-int getHeal() {
-    return heal;
-}
+    int getHeal() {
+        return heal;
+    }
 
-int getFood() {
-    return food;
-}
+    int getFood() {
+        return food;
+    }
 
-int getDamage() {
-    return damage;
-}
+    int getDamage() {
+        return damage;
+    }
 
 private:
     string name;
@@ -164,13 +155,13 @@ public:
         this->description = description;
     }
 
-string getName() {
-    return name;
-}
+    string getName() {
+        return name;
+    }
 
-string getDescription() {
-    return description;
-}
+    string getDescription() {
+        return description;
+    }
 
 private:
     string name;
@@ -179,7 +170,7 @@ private:
 
 class Zombie {
 public:
-    Zombie(int zombieHealth, int zombieDamage) {
+    Zombie() {
         zombieHealth = MAX_ZOMBIE_HEALTH;
         zombieDamage = MAX_ZOMBIE_DAMAGE;
     }
@@ -197,15 +188,12 @@ public:
         if (zombieHealth < 0) {
             zombieHealth = 0;
         }
-
     }
 
-    private:
-        int zombieHealth;
-        int zombieDamage;
-        int damage;
-    };
-}
+private:
+    int zombieHealth;
+    int zombieDamage;
+};
 
 // Functions
 void printHelp() {
@@ -285,7 +273,7 @@ int main() {
     // Initialize zombies
     vector<Zombie> zombies;
     for (int i = 0; i < MAX_ZOMBIES; i++) {
-        zombies.push_back(Zombie(MAX_HEALTH, MAX_DAMAGE));
+        zombies.push_back(Zombie());
     }
 
     // Initialize inventory
@@ -329,17 +317,29 @@ int main() {
                 inventory.push_back(weapon);
             }
         } else if (command == "eat") {
-
+            if (!inventory.empty()) {
+                for (auto it = inventory.begin(); it != inventory.end(); ++it) {
+                    if (it->getFood() > 0) {
+                        player.eat(it->getFood());
+                        inventory.erase(it);
+                        break;
+                    }
+                }
+            }
         } else if (command == "heal") {
-
+            if (player.getMedkits() > 0) {
+                player.heal(MAX_HEAL);
+                player.addMedkit();
+            }
         } else if (command == "fight") {
-
+            int zombieIndex = zombieDistribution(randomGenerator);
+            fightZombie(player, zombies[zombieIndex]);
         } else if (command == "exit") {
             break;
         } else {
             cout << "Invalid command!" << endl;
         }
-
     }
 
     return 0;
+}
