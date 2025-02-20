@@ -23,88 +23,23 @@ const int MAX_ZOMBIES = 5;
 // Classes
 class Player {
 public:
-    Player() {
-        health = MAX_HEALTH;
-        hunger = MAX_HUNGER;
-        damage = 1;
-        medkits = 0;
-        weapons = 0;
-        location = 0;
-        zombieKills = 0;
-    }
+    Player() : health(MAX_HEALTH), hunger(MAX_HUNGER), medkits(0), weapons(0), location(0), zombieKills(0), damage(0) {}
 
-    void takeDamage(int damage) {
-        health -= damage;
-        if (health < 0) {
-            health = 0;
-        }
-    }
+    int getHealth() const { return health; }
+    int getHunger() const { return hunger; }
+    int getMedkits() const { return medkits; }
+    int getWeapons() const { return weapons; }
+    int getLocation() const { return location; }
+    int getZombiesKilled() const { return zombieKills; }
+    int getDamage() const { return damage; }
 
-    void heal(int heal) {
-        health += heal;
-        if (health > MAX_HEALTH) {
-            health = MAX_HEALTH;
-        }
-    }
-
-    void eat(int food) {
-        hunger += food;
-        if (hunger > MAX_HUNGER) {
-            hunger = MAX_HUNGER;
-        }
-    }
-
-    void addMedkit() {
-        medkits++;
-    }
-
-    void addWeapon() {
-        weapons++;
-    }
-
-    void addZombieKill() {
-        zombieKills++;
-    }
-
-    void increaseDamage() {
-        damage++;
-    }
-
-    void decreaseDamage() {
-        damage--;
-    }
-
-    int getHealth() {
-        return health;
-    }
-
-    int getHunger() {
-        return hunger;
-    }
-
-    int getMedkits() {
-        return medkits;
-    }
-
-    int getWeapons() {
-        return weapons;
-    }
-
-    int getZombiesKilled() {
-        return zombieKills;
-    }
-
-    int getDamage() {
-        return damage;
-    }
-
-    int getLocation() {
-        return location;
-    }
-
-    void setLocation(int loc) {
-        location = loc;
-    }
+    void setLocation(int loc) { location = loc; }
+    void takeDamage(int dmg) { health -= dmg; }
+    void heal(int amount) { health = min(MAX_HEALTH, health + amount); }
+    void eat(int amount) { hunger = min(MAX_HUNGER, hunger + amount); }
+    void addMedkit() { medkits++; }
+    void addWeapon() { weapons++; }
+    void addZombieKill() { zombieKills++; }
 
 private:
     int health;
@@ -118,28 +53,12 @@ private:
 
 class Item {
 public:
-    Item(string name, int heal, int food, int damage) {
-        this->name = name;
-        this->heal = heal;
-        this->food = food;
-        this->damage = damage;
-    }
+    Item(string n, int h, int f, int d) : name(n), heal(h), food(f), damage(d) {}
 
-    string getName() {
-        return name;
-    }
-
-    int getHeal() {
-        return heal;
-    }
-
-    int getFood() {
-        return food;
-    }
-
-    int getDamage() {
-        return damage;
-    }
+    string getName() const { return name; }
+    int getHeal() const { return heal; }
+    int getFood() const { return food; }
+    int getDamage() const { return damage; }
 
 private:
     string name;
@@ -150,18 +69,10 @@ private:
 
 class Location {
 public:
-    Location(string name, string description) {
-        this->name = name;
-        this->description = description;
-    }
+    Location(string n, string d) : name(n), description(d) {}
 
-    string getName() {
-        return name;
-    }
-
-    string getDescription() {
-        return description;
-    }
+    string getName() const { return name; }
+    string getDescription() const { return description; }
 
 private:
     string name;
@@ -170,25 +81,11 @@ private:
 
 class Zombie {
 public:
-    Zombie() {
-        zombieHealth = MAX_ZOMBIE_HEALTH;
-        zombieDamage = MAX_ZOMBIE_DAMAGE;
-    }
+    Zombie() : zombieHealth(MAX_ZOMBIE_HEALTH), zombieDamage(MAX_ZOMBIE_DAMAGE) {}
 
-    int getZombieHealth() {
-        return zombieHealth;
-    }
-
-    int getZDamage() {
-        return zombieDamage;
-    }
-
-    void takeDamage(int damage) {
-        zombieHealth -= damage;
-        if (zombieHealth < 0) {
-            zombieHealth = 0;
-        }
-    }
+    int getZombieHealth() const { return zombieHealth; }
+    int getZDamage() const { return zombieDamage; }
+    void takeDamage(int dmg) { zombieHealth -= dmg; }
 
 private:
     int zombieHealth;
